@@ -1,347 +1,434 @@
 <!doctype html>
 <html lang="de">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Spenden registrieren - Do Good.</title>
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Bootstrap CSS einbindung -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
 
-    <!-- Vue.js -->
+    <!-- Bootstrap JS einbindung -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Vue.js einbindung -->
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 
     <!-- Eigene Styles -->
     <link rel="stylesheet" href="style.css" />
-</head>
+  </head>
 
-<body class="d-flex flex-column min-vh-100">
-
+  <body class="d-flex flex-column min-vh-100">
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
+      <div class="container">
+        <!-- Logo mit Bild und Markenname -->
+        <a class="navbar-brand" href="index.html">
+          <img src="bird.png" alt="Logo" width="30" height="30" />
+          <strong> Do Good.</strong>
+        </a>
 
-            <!-- Logo -->
-            <a class="navbar-brand" href="index.html">
-                <img src="bird.png" alt="Logo" width="30" height="30">
-                <strong> Do Good.</strong>
-            </a>
+        <!-- Hamburger-Button  -->
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
-            <!-- Navigationslinks -->
-            <div class="navbar-nav">
-                <a class="nav-link" href="index.html">Home</a>
-                <a class="nav-link" href="#">Spenden registrieren</a>
-                <a class="nav-link" href="index.html#ueber">Über uns</a>
-                <a class="nav-link" href="mailto:kontakt@do-good.de">Kontakt</a>
-            </div>
-
+        <!-- Navigationslinks  -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <div class="navbar-nav ms-auto">
+            <a class="nav-link" href="index.html">Home</a>
+            <a class="nav-link" href="registrierung.html"
+              >Spenden registrieren</a
+            >
+            <a class="nav-link" href="index.html#ueber">Über uns</a>
+            <a class="nav-link" href="mailto:kontakt@do-good.de">Kontakt</a>
+          </div>
         </div>
+      </div>
     </nav>
 
     <!-- Formular für Spendenregistrierung -->
     <main class="container mt-5">
-        <div id="app">
+      <div id="app">
+        <!-- Formular wird ausgeblendet nach Absenden -->
+        <div v-if="!formSubmitted">
+          <h1 class="mb-5 text-center">Spendenregistrierung</h1>
 
-            <!-- Formular wird ausgeblendet nach Absenden -->
-            <div v-if="!formSubmitted">
-                <h1 class="mb-5 text-center">Spendenregistrierung</h1>
+          <div class="card p-2 mb-4">
+            <!-- Modusauswahl: Abholung oder Übergabe -->
+            <h5 class="mb-3 mt-3 mx-5" style="font-weight: 600">
+              Wie möchtest du deine Spende abgeben?
+            </h5>
 
-                <div class="card p-2 mb-4">
+            <div class="form-check mt-3 mx-5">
+              <input
+                class="form-check-input"
+                type="radio"
+                id="modus-abholung"
+                value="abholung"
+                v-model="modus"
+              />
+              <label class="form-check-label" for="modus-abholung">
+                <strong>Abholung</strong>
+              </label>
+              <p>
+                Wir holen deine Spende kostenlos mit einem Sammelfahrzeug bei
+                dir zu Hause ab (nur innerhalb Berlins).
+              </p>
+            </div>
 
-                    <!-- Modusauswahl: Abholung oder Übergabe -->
-                    <h5 class="mb-3 mt-3 mx-5" style="font-weight: 600">
-                        Wie möchtest du deine Spende abgeben?
-                    </h5>
+            <div class="form-check mt-3 mx-5 mb-5">
+              <input
+                class="form-check-input"
+                type="radio"
+                id="modus-abgabe"
+                value="abgabe"
+                v-model="modus"
+              />
+              <label class="form-check-label" for="modus-abgabe">
+                <strong>Übergabe an der Geschäftsstelle</strong>
+              </label>
+              <p>
+                Du lieferst deine Spende selbst an unserer Geschäftsstelle in
+                Berlin an.
+              </p>
+            </div>
 
-                    <div class="form-check mt-3 mx-5">
-                        <input class="form-check-input" type="radio" id="modus-abholung"
-                            value="abholung" v-model="modus" />
-                        <label class="form-check-label" for="modus-abholung">
-                            Abholung
-                        </label>
-                    </div>
+            <!-- Felder für Abholung: Adresse + Kleidungsart + Krisengebiet -->
+            <div v-if="modus === 'abholung'" class="card p-3 mt-3 mb-4 mx-5">
+              <p style="font-weight: 600">
+                Bitte Abholadresse vollständig ausfüllen. Kostenlose Abholung
+                nur innerhalb Berlins (Postleitzahl muss mit '12' beginnen).
+              </p>
 
-                    <div class="form-check mt-3 mx-5 mb-5">
-                        <input class="form-check-input" type="radio" id="modus-abgabe"
-                            value="abgabe" v-model="modus" />
-                        <label class="form-check-label" for="modus-abgabe">
-                            Übergabe an der Geschäftsstelle
-                        </label>
-                    </div>
+              <label class="form-label" for="name">Name</label>
+              <input
+                type="text"
+                id="name"
+                class="form-control mb-3"
+                placeholder="Max Mustermann"
+                v-model="name"
+              />
 
-                    <!-- Felder für Abholung: Adresse + Kleidungsart + Krisengebiet -->
-                    <div v-if="modus === 'abholung'" class="card p-3 mt-3 mb-4 mx-5">
-                        <p style="font-weight: 600">
-                            Bitte Abholadresse vollständig ausfüllen. Ort der Abholung muss in Berlin liegen.
-                        </p>
+              <label class="form-label" for="strasse"
+                >Strasse + Hausnummer</label
+              >
+              <input
+                type="text"
+                id="strasse"
+                class="form-control mb-3"
+                placeholder="Musterstraße 1"
+                v-model="strasse"
+              />
 
-                        <label class="form-label" for="name">Name</label>
-                        <input type="text" id="name" class="form-control mb-3"
-                            placeholder="Max Mustermann" v-model="name" />
+              <label class="form-label" for="ort">Ort</label>
+              <input
+                type="text"
+                id="ort"
+                class="form-control mb-3"
+                placeholder="Musterstadt"
+                v-model="ort"
+              />
 
-                        <label class="form-label" for="strasse">Strasse + Hausnummer</label>
-                        <input type="text" id="strasse" class="form-control mb-3"
-                            placeholder="Musterstraße 1" v-model="strasse" />
+              <label class="form-label" for="telefonnummer"
+                >Telefonnummer</label
+              >
+              <input
+                type="text"
+                id="telefonnummer"
+                class="form-control mb-3"
+                placeholder="+49 0123456789"
+                v-model="telefonnummer"
+              />
 
-                        <label class="form-label" for="ort">Ort</label>
-                        <input type="text" id="ort" class="form-control mb-3"
-                            placeholder="Musterstadt" v-model="ort" />
+              <label class="form-label" for="postleitzahl"
+                >Postleitzahl (Berlin)</label
+              >
+              <input
+                type="text"
+                id="postleitzahl"
+                class="form-control mb-3"
+                placeholder="12___"
+                maxlength="5"
+                v-model="postleitzahl"
+                @input="validatePostleitzahl"
+              />
 
-                        <label class="form-label" for="telefonnummer">Telefonnummer</label>
-                        <input type="text" id="telefonnummer" class="form-control mb-3"
-                            placeholder="+49 0123456789" v-model="telefonnummer" />
+              <!-- PLZ-Fehlermeldung -->
+              <div v-if="plzfehler" class="alert alert-danger mt-2">
+                {{ plzfehlertext }}
+              </div>
 
-                        <label class="form-label" for="postleitzahl">Postleitzahl (Berlin)</label>
-                        <input type="text" id="postleitzahl" class="form-control mb-3"
-                            placeholder="12XXX" maxlength="5"
-                            v-model="postleitzahl" @input="validatePostleitzahl" />
+              <label class="form-label" for="kleidungsart-abholung"
+                >Kleidungsart</label
+              >
+              <select
+                id="kleidungsart-abholung"
+                v-model="kleidungsart"
+                class="form-select mb-3"
+              >
+                <option value="" disabled selected>Bitte auswählen...</option>
+                <option value="Herrenbekleidung">Herrenbekleidung</option>
+                <option value="Damenbekleidung">Damenbekleidung</option>
+                <option value="Kinderbekleidung">Kinderbekleidung</option>
+                <option value="Sonstiges">Sonstiges</option>
+              </select>
 
-                        <!-- PLZ-Fehlermeldung -->
-                        <div v-if="plzfehler" class="alert alert-danger mt-2">
-                            {{ plzfehlertext }}
-                        </div>
+              <label class="form-label" for="krisengebiet-abholung"
+                >Krisengebiet</label
+              >
+              <select
+                id="krisengebiet-abholung"
+                class="form-select"
+                v-model="krisengebiet"
+              >
+                <option value="" disabled selected>Bitte auswählen...</option>
+                <option value="Ukraine">Ukraine</option>
+                <option value="Syrien">Syrien</option>
+                <option value="Gaza">Gaza</option>
+                <option value="Sudan">Sudan</option>
+                <option value="Afghanistan">Afghanistan</option>
+              </select>
+            </div>
 
-                        <label class="form-label" for="kleidungsart">Kleidungsart</label>
-                        <select id="kleidungsart" v-model="kleidungsart" class="form-select mb-3">
-                            <option value="" disabled selected>Bitte auswählen</option>
-                            <option value="Herrenbekleidung">Herrenbekleidung</option>
-                            <option value="Damenbekleidung">Damenbekleidung</option>
-                            <option value="Kinderbekleidung">Kinderbekleidung</option>
-                            <option value="Sonstiges">Sonstiges</option>
-                        </select>
+            <!-- Felder für Übergabe: Kleidungsart + Krisengebiet + Geschäftsstellen-Info -->
+            <div v-if="modus === 'abgabe'" class="card p-3 mt-3 mb-4 mx-5">
+              <label class="form-label" for="kleidungsart-abgabe"
+                >Kleidungsart</label
+              >
+              <select
+                id="kleidungsart-abgabe"
+                v-model="kleidungsart"
+                class="form-select mb-3"
+              >
+                <option value="" disabled selected>Bitte auswählen...</option>
+                <option value="Herrenbekleidung">Herrenbekleidung</option>
+                <option value="Damenbekleidung">Damenbekleidung</option>
+                <option value="Kinderbekleidung">Kinderbekleidung</option>
+                <option value="Sonstiges">Sonstiges</option>
+              </select>
 
-                        <label class="form-label">Krisengebiet</label>
-                        <select class="form-select" v-model="krisengebiet">
-                            <option value="">Bitte wählen...</option>
-                            <option value="Ukraine">Ukraine</option>
-                            <option value="Syrien">Syrien</option>
-                            <option value="Gaza">Gaza</option>
-                            <option value="Sudan">Sudan</option>
-                            <option value="Afghanistan">Afghanistan</option>
-                        </select>
-                    </div>
+              <label class="form-label" for="krisengebiet-abgabe"
+                >Krisengebiet</label
+              >
+              <select
+                id="krisengebiet-abgabe"
+                class="form-select"
+                v-model="krisengebiet"
+              >
+                <option value="" disabled selected>Bitte auswählen...</option>
+                <option value="Ukraine">Ukraine</option>
+                <option value="Syrien">Syrien</option>
+                <option value="Gaza">Gaza</option>
+                <option value="Sudan">Sudan</option>
+                <option value="Afghanistan">Afghanistan</option>
+              </select>
 
-                    <!-- Felder für Übergabe: Kleidungsart + Krisengebiet + Geschäftsstellen-Info -->
-                    <div v-if="modus === 'abgabe'" class="card p-3 mt-3 mb-4 mx-5">
-
-                        <label class="form-label" for="kleidungsart">Kleidungsart</label>
-                        <select id="kleidungsart" v-model="kleidungsart" class="form-select mb-3">
-                            <option value="" disabled selected>Bitte auswählen</option>
-                            <option value="Herrenbekleidung">Herrenbekleidung</option>
-                            <option value="Damenbekleidung">Damenbekleidung</option>
-                            <option value="Kinderbekleidung">Kinderbekleidung</option>
-                            <option value="Sonstiges">Sonstiges</option>
-                        </select>
-
-                        <label class="form-label">Krisengebiet</label>
-                        <select class="form-select" v-model="krisengebiet">
-                            <option value="">Bitte wählen...</option>
-                            <option value="Ukraine">Ukraine</option>
-                            <option value="Syrien">Syrien</option>
-                            <option value="Gaza">Gaza</option>
-                            <option value="Sudan">Sudan</option>
-                            <option value="Afghanistan">Afghanistan</option>
-                        </select>
-
-                        <!-- Adresse und Öffnungszeiten der Geschäftsstelle -->
-                        <div class="row mt-3 mb-4">
-
-                            <div class="col-12 col-md-6">
-                                <p style="font-weight: 600" class="mt-3">Abgabeadresse:</p>
-                                <p>
-                                    Geschäftsstelle Do Good.<br />
-                                    Pannierstraße 31<br />
-                                    12047 Berlin<br />
-                                    Deutschland
-                                </p>
-                                <a href="https://maps.app.goo.gl/3p27jX9AKBRCgxX4A" target="_blank"
-                                    class="btn btn-outline-primary">
-                                    In Google Maps anzeigen
-                                </a>
-                            </div>
-
-                            <div class="col-12 col-md-6">
-                                <p style="font-weight: 600" class="mt-3">Öffnungszeiten:</p>
-                                <p>
-                                    Mo-Fr: 9:00 - 17:00 Uhr<br />
-                                    Sa: 10:00 - 14:00 Uhr
-                                </p>
-                                <a href="mailto:kontakt@do-good.de" class="btn btn-outline-primary">
-                                    Kontakt aufnehmen
-                                </a>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <!-- Absenden-Button: aktiv wenn alle Pflichtfelder ausgefüllt -->
-                    <div class="p-3 mt-3 mb-4 mx-5">
-                        <button class="btn w-100"
-                            :class="isFormValid ? 'btn-success' : 'btn-secondary'"
-                            :disabled="!isFormValid"
-                            @click="submitForm">
-                            {{ isFormValid ? 'Registrieren' : 'Bitte alle Felder ausfüllen' }}
-                        </button>
-                    </div>
-
+              <!-- Adresse und Öffnungszeiten der Geschäftsstelle -->
+              <div class="row mt-3 mb-4">
+                <div class="col-12 col-md-6">
+                  <p style="font-weight: 600" class="mt-3">Abgabeadresse:</p>
+                  <p>
+                    Geschäftsstelle Do Good.<br />
+                    Pannierstraße 31<br />
+                    12047 Berlin<br />
+                    Deutschland
+                  </p>
+                  <a
+                    href="https://maps.app.goo.gl/3p27jX9AKBRCgxX4A"
+                    target="_blank"
+                    class="btn btn-outline-primary"
+                  >
+                    In Google Maps anzeigen
+                  </a>
                 </div>
+
+                <div class="col-12 col-md-6">
+                  <p style="font-weight: 600" class="mt-3">Öffnungszeiten:</p>
+                  <p>
+                    Mo-Fr: 9:00 - 17:00 Uhr<br />
+                    Sa: 10:00 - 14:00 Uhr
+                  </p>
+                  <a
+                    href="mailto:kontakt@do-good.de"
+                    class="btn btn-outline-primary"
+                  >
+                    Kontakt aufnehmen
+                  </a>
+                </div>
+              </div>
             </div>
 
-            <!-- Bestätigungsseite nach erfolgreichem Absenden -->
-            <div v-if="formSubmitted" class="card p-5 text-center mx-5">
-                <h2 class="mb-4">Registrierung erfolgreich!</h2>
-                <h5 class="mb-4">Vielen Dank für deine Spende! Hier sind die Details deiner Registrierung:</h5>
-
-                <table class="table table-bordered text-start">
-
-                    <tr>
-                        <th>Variante</th>
-                        <td>{{ modus === 'abholung' ? 'Abholung' : 'Übergabe' }}</td>
-                    </tr>
-
-                    <!-- Adressfelder nur bei Abholung -->
-                    <tr v-if="modus === 'abholung'">
-                        <th>Name</th>
-                        <td>{{ name }}</td>
-                    </tr>
-                    <tr v-if="modus === 'abholung'">
-                        <th>Strasse</th>
-                        <td>{{ strasse }}</td>
-                    </tr>
-                    <tr v-if="modus === 'abholung'">
-                        <th>Ort</th>
-                        <td>{{ ort }}</td>
-                    </tr>
-                    <tr v-if="modus === 'abholung'">
-                        <th>Postleitzahl</th>
-                        <td>{{ postleitzahl }}</td>
-                    </tr>
-
-                    <tr>
-                        <th>Kleidungsart</th>
-                        <td>{{ kleidungsart }}</td>
-                    </tr>
-                    <tr>
-                        <th>Krisengebiet</th>
-                        <td>{{ krisengebiet }}</td>
-                    </tr>
-                    <tr>
-                        <th>Datum</th>
-                        <td>{{ datum }}</td>
-                    </tr>
-                    <tr>
-                        <th>Uhrzeit</th>
-                        <td>{{ uhrzeit + ' Uhr' }}</td>
-                    </tr>
-
-                    <!-- Ort der Abgabe: bei Abholung die eingegebene Adresse, sonst Geschäftsstelle -->
-                    <tr>
-                        <th>Ort der Abgabe</th>
-                        <td>{{ modus === 'abholung'
-                            ? strasse + ', ' + postleitzahl + ' ' + ort
-                            : 'Pannierstraße 31, 12047 Berlin' }}
-                        </td>
-                    </tr>
-
-                </table>
-
-                <a href="registrierung.html" class="btn btn-primary mt-4">Zurück</a>
+            <!-- Absenden-Button: aktiv wenn alle Pflichtfelder ausgefüllt -->
+            <div class="p-3 mt-3 mb-4 mx-5">
+              <button
+                class="btn w-100"
+                :class="isFormValid ? 'btn-success' : 'btn-secondary'"
+                :disabled="!isFormValid"
+                @click="submitForm"
+              >
+                {{ isFormValid ? 'Registrieren' : 'Bitte alle Felder ausfüllen'
+                }}
+              </button>
             </div>
-
+          </div>
         </div>
+
+        <!-- Bestätigungsseite nach erfolgreichem Absenden -->
+        <div v-if="formSubmitted" class="card p-5 text-center mx-5">
+          <h2 class="mb-4">Registrierung erfolgreich!</h2>
+          <h5 class="mb-4">
+            Vielen Dank für deine Spende! Hier sind die Details deiner
+            Registrierung:
+          </h5>
+
+          <table class="table table-bordered text-start">
+            <tr>
+              <th>Variante</th>
+              <td>{{ modus === 'abholung' ? 'Abholung' : 'Übergabe' }}</td>
+            </tr>
+
+            <!-- Adressfelder nur bei Abholung -->
+            <tr v-if="modus === 'abholung'">
+              <th>Name</th>
+              <td>{{ name }}</td>
+            </tr>
+            <tr v-if="modus === 'abholung'">
+              <th>Strasse</th>
+              <td>{{ strasse }}</td>
+            </tr>
+            <tr v-if="modus === 'abholung'">
+              <th>Ort</th>
+              <td>{{ ort }}</td>
+            </tr>
+            <tr v-if="modus === 'abholung'">
+              <th>Postleitzahl</th>
+              <td>{{ postleitzahl }}</td>
+            </tr>
+            <tr v-if="modus === 'abholung'">
+              <th>Telefonnummer</th>
+              <td>{{ telefonnummer }}</td>
+            </tr>
+
+            <tr>
+              <th>Kleidungsart</th>
+              <td>{{ kleidungsart }}</td>
+            </tr>
+            <tr>
+              <th>Krisengebiet</th>
+              <td>{{ krisengebiet }}</td>
+            </tr>
+            <tr>
+              <th>Datum</th>
+              <td>{{ datum }}</td>
+            </tr>
+            <tr>
+              <th>Uhrzeit</th>
+              <td>{{ uhrzeit + ' Uhr' }}</td>
+            </tr>
+
+            <!-- Ort der Abgabe: bei Abholung die eingegebene Adresse, sonst Geschäftsstelle -->
+            <tr>
+              <th>Ort der Abgabe</th>
+              <td>
+                {{ modus === 'abholung' ? strasse + ', ' + postleitzahl + ' ' +
+                ort : 'Pannierstraße 31, 12047 Berlin' }}
+              </td>
+            </tr>
+          </table>
+
+          <a href="registrierung.html" class="btn btn-primary mt-4">Zurück</a>
+        </div>
+      </div>
     </main>
 
     <!-- Footer -->
     <footer class="bg-dark text-white mt-auto py-4">
-        <div class="container">
-            <div class="row">
+      <div class="container">
+        <div class="row">
+          <!-- Copyright -->
+          <div class="col-6">
+            <p>&copy; 2026 Do Good. Alle Rechte vorbehalten.</p>
+          </div>
 
-                <!-- Copyright -->
-                <div class="col-md-6">
-                    <p>&copy; 2026 Do Good. Alle Rechte vorbehalten.</p>
-                </div>
-
-                <!-- Links -->
-                <div class="col-md-6 text-end">
-                    <a href="#impressum" class="text-white me-3">Impressum</a>
-                    <a href="#datenschutz" class="text-white">Datenschutz</a>
-                </div>
-
-            </div>
+          <!-- Links -->
+          <div class="col-6 text-end">
+            <a href="#impressum" class="text-white me-3">Impressum</a>
+            <a href="#datenschutz" class="text-white">Datenschutz</a>
+          </div>
         </div>
+      </div>
     </footer>
 
     <!-- Vue.js App -->
     <script>
-        Vue.createApp({
+      Vue.createApp({
+        // Alle Formular-Variablen
+        data() {
+          return {
+            modus: "",
+            name: "",
+            strasse: "",
+            ort: "",
+            postleitzahl: "",
+            telefonnummer: "",
+            kleidungsart: "",
+            krisengebiet: "",
+            plzfehler: false,
+            plzfehlertext:
+              "Abholung nur innerhalb Berlins möglich (PLZ muss mit '12' beginnen).",
+            formSubmitted: false,
+            datum: "",
+            uhrzeit: "",
+          };
+        },
 
-            // Alle Formular-Variablen
-            data() {
-                return {
-                    modus: "",
-                    name: "",
-                    strasse: "",
-                    ort: "",
-                    postleitzahl: "",
-                    telefonnummer: "",
-                    kleidungsart: "",
-                    krisengebiet: "",
-                    plzfehler: false,
-                    plzfehlertext: "Die Postleitzahl muss mit '12' beginnen.",
-                    formSubmitted: false,
-                    datum: "",
-                    uhrzeit: ""
-                };
-            },
-
-            // Prüft ob alle Pflichtfelder ausgefüllt sind
-            computed: {
-                isFormValid() {
-                    if (this.modus === "abholung") {
-                        return (
-                            this.name !== "" &&
-                            this.strasse !== "" &&
-                            this.ort !== "" &&
-                            this.postleitzahl !== "" &&
-                            this.telefonnummer !== "" &&
-                            this.kleidungsart !== "" &&
-                            this.krisengebiet !== "" &&
-                            !this.plzfehler
-                        );
-                    } else if (this.modus === "abgabe") {
-                        return (
-                            this.kleidungsart !== "" &&
-                            this.krisengebiet !== ""
-                        );
-                    }
-                    return false;
-                }
-            },
-
-            methods: {
-
-                // PLZ-Prüfung: muss mit '12' beginnen (Berliner Postleitzahl)
-                validatePostleitzahl() {
-                    if (this.postleitzahl.substring(0, 2) === "12") {
-                        this.plzfehler = false;
-                    } else {
-                        this.plzfehler = true;
-                    }
-                },
-
-                // Formular absenden: Datum und Uhrzeit setzen, Bestätigung anzeigen
-                submitForm() {
-                    const now = new Date();
-                    this.datum = now.toLocaleDateString("de-DE");
-                    this.uhrzeit = now.toLocaleTimeString("de-DE");
-                    this.formSubmitted = true;
-                }
-
+        // Prüft ob alle Pflichtfelder ausgefüllt sind
+        computed: {
+          isFormValid() {
+            if (this.modus === "abholung") {
+              return (
+                this.name !== "" &&
+                this.strasse !== "" &&
+                this.ort !== "" &&
+                this.postleitzahl !== "" &&
+                this.telefonnummer !== "" &&
+                this.kleidungsart !== "" &&
+                this.krisengebiet !== "" &&
+                !this.plzfehler
+              );
+            } else if (this.modus === "abgabe") {
+              return this.kleidungsart !== "" && this.krisengebiet !== "";
             }
+            return false;
+          },
+        },
 
-        }).mount("#app");
+        methods: {
+          // PLZ-Prüfung: muss mit '12' beginnen (Berliner Postleitzahl)
+          validatePostleitzahl() {
+            if (this.postleitzahl.substring(0, 2) === "12") {
+              this.plzfehler = false;
+            } else {
+              this.plzfehler = true;
+            }
+          },
+
+          // Formular absenden: Datum und Uhrzeit setzen, Bestätigung anzeigen
+          submitForm() {
+            const now = new Date();
+            this.datum = now.toLocaleDateString("de-DE");
+            this.uhrzeit = now.toLocaleTimeString("de-DE");
+            this.formSubmitted = true;
+          },
+        },
+      }).mount("#app");
     </script>
-
-</body>
+  </body>
 </html>

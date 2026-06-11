@@ -8,7 +8,7 @@ Fallstudie IPWA01-01 - Programmierung von Webanwendungsoberflächen
 - PLZ-Validierung (Berliner Postleitzahlen)
 - Responsives Design für Desktop und Tablet
 - Dynamische Formularvalidierung
-- Bestätigungsseite mit Datum und Uhrzeit
+- Bestätigungsansicht mit relevanten Daten, Datum und Uhrzeit
 
 ## Tech-Stack
 - HTML5, CSS3, JavaScript
